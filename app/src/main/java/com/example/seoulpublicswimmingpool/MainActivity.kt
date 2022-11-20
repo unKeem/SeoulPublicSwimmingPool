@@ -2,7 +2,6 @@ package com.example.seoulpublicswimmingpool
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -17,8 +16,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    val dataList = mutableListOf<DataVO>()
-    lateinit var customAdapter: CustomAdapter
+    var dataList = arrayListOf<DataVO>()
+    private lateinit var customAdapter: CustomAdapter
 
     @SuppressLint("Recycle")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +25,21 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        dataList = swimmlessonData()
+
+        val layoutManager: LinearLayoutManager = selectLayoutManager(1)
+        customAdapter = CustomAdapter(dataList)
+//        this.customAdapter = customAdapter
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.adapter = customAdapter
+        binding.recyclerView.setHasFixedSize(true)
+    }
+
+    private fun selectLayoutManager(i: Int): LinearLayoutManager {
+        return LinearLayoutManager(this)
+    }
+
+    private fun swimmlessonData(): ArrayList<DataVO> {
         // 1.retrofit 객체를 생성
         val retrofit = Retrofit.Builder()
             .baseUrl(SeoulOpenApi.DOMAIN)
@@ -45,15 +59,18 @@ class MainActivity : AppCompatActivity() {
                     val data = response.body()
 
                     data?.let {
-//                        it.SeoulPublicLibraryInfo.list_total_count
+                        it.ListProgramByPublicSportsFacilitiesService.list_total_count
                         Log.d("retrofit", "서울공공수영장 강습 내용 로드 성공")
                         for (loadData in it.ListProgramByPublicSportsFacilitiesService.row) {
                             val center_name = loadData.CENTER_NAME
                             val week = loadData.WEEK
                             val class_time = loadData.CLASS_TIME
-                            val fee = loadData.FEE
+                            val fee = loadData.FEE.toString()
+                            dataList.add(DataVO(center_name, week, class_time, fee))
                             Log.d("retrofit", "${center_name} ${week} ${class_time} ${fee}")
                         }
+                        Log.d("retrofit", "${dataList.size}")
+                        customAdapter.setList(dataList)
                     } ?: let {
                         Log.d("retrofit", "서울공공수영장 강습 데이터 없음")
                     }
@@ -65,34 +82,6 @@ class MainActivity : AppCompatActivity() {
                         .show()
                 }
             })
-
-//        val cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-//            arrayOf<String>(ContactsContract.CommonDataKinds.Phone.Co,
-//                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-//                ContactsContract.CommonDataKinds.Phone.NUMBER),
-//            null,
-//            null,
-//            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME
-//        )
-//        while(cursor?.moveToNext()?:false){
-//            val id = cursor?.getString(0)
-//            val name = cursor?.getString(1)
-//            val phone = cursor?.getString(2)
-//            Log.d("phoneaddress", "${id}, ${name}, ${phone}")
-//            dataList.add(DataVO(id!!, name!!, phone!!))
-//        }
-
-        val layoutManager: LinearLayoutManager = selectLayoutManager(1)
-        customAdapter = CustomAdapter(dataList)
-        this.customAdapter = customAdapter
-        binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = customAdapter
-        binding.recyclerView.setHasFixedSize(true)
-
+        return dataList
     }
-
-    private fun selectLayoutManager(i: Int): LinearLayoutManager {
-        return LinearLayoutManager(this)
-    }
-
 }

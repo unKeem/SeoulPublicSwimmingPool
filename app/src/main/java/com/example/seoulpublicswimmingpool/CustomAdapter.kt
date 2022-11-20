@@ -1,11 +1,13 @@
 package com.example.seoulpublicswimmingpool
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView.OnItemClickListener
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seoulpublicswimmingpool.databinding.ItemMainBinding
 
-class CustomAdapter(private val dataList: MutableList<DataVO>) :
+class CustomAdapter(private var dataList: ArrayList<DataVO>) :
     RecyclerView.Adapter<CustomAdapter.CustomViewHolder>() {
 
     inner class CustomViewHolder(private val binding: ItemMainBinding) :
@@ -15,7 +17,6 @@ class CustomAdapter(private val dataList: MutableList<DataVO>) :
             binding.tvWeek.text = data.week
             binding.tvClassTime.text = data.time
             binding.tvFee.text = data.fee
-            val position = bindingAdapterPosition
         }
     }
 
@@ -30,5 +31,18 @@ class CustomAdapter(private val dataList: MutableList<DataVO>) :
 
     override fun getItemCount(): Int = dataList.size
 
+    fun setList(list:ArrayList<DataVO>){
+        dataList = list
+    }
 
+    private var listener: OnItemClickListener? = null
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.listener = listener
+    }
+
+    interface OnItemClickListener {
+        fun onClickItem(view: View, position: Int)
+        fun onClickDeleteItem(view: View, position: Int)
+    }
 }
