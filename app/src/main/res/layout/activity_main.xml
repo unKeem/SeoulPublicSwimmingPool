@@ -5,20 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity"
+    tools:context=".activity.MainActivity"
     android:padding="10sp">
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_loadList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="리스트 불러오기"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:nestedScrollingEnabled="false"
-        android:overScrollMode="never" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        />
 
 </LinearLayout>

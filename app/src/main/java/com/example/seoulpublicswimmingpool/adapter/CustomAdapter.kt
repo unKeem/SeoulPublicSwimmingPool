@@ -1,19 +1,20 @@
-package com.example.seoulpublicswimmingpool
+package com.example.seoulpublicswimmingpool.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
 import androidx.recyclerview.widget.RecyclerView
+import com.example.seoulpublicswimmingpool.database.SwimLesson
+import com.example.seoulpublicswimmingpool.seoulPublicSwimLessonData.Row
 import com.example.seoulpublicswimmingpool.databinding.ItemMainBinding
 
-class CustomAdapter(private var dataList: ArrayList<DataVO>) :
+class CustomAdapter(private var dataList: ArrayList<SwimLesson>) :
     RecyclerView.Adapter<CustomAdapter.CustomViewHolder>() {
 
     inner class CustomViewHolder(private val binding: ItemMainBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: DataVO) {
-            binding.tvCenterName.text = data.centerName
+        fun bind(data: SwimLesson) {
+            binding.tvCenterName.text = data.center
             binding.tvWeek.text = data.week
             binding.tvClassTime.text = data.time
             binding.tvFee.text = data.fee
@@ -26,14 +27,10 @@ class CustomAdapter(private var dataList: ArrayList<DataVO>) :
     }
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-        holder.bind(dataList[position])
+        holder.bind( dataList[position])
     }
 
     override fun getItemCount(): Int = dataList.size
-
-    fun setList(list:ArrayList<DataVO>){
-        dataList = list
-    }
 
     private var listener: OnItemClickListener? = null
 

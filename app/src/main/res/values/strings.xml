@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">SeoulPublicSwimmingPool</string>
+    <string name="app_name">SeoulPublicSwimmingPoolLesson</string>
+    <string name="search">SEARCH</string>
 </resources>
